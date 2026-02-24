@@ -2,187 +2,142 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Painel de Controle Multi-API</title>
+    <title>Painel Multi-API Funcional</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #121212; color: #e0e0e0; padding: 40px 0; }
-        .api-card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; transition: 0.3s; }
-        .api-card:hover { border-color: #0d6efd; }
-        .json-output { background: #000; color: #00ff41; padding: 15px; border-radius: 8px; font-size: 0.85rem; height: 200px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #222; }
-        .btn-run { width: 100%; font-weight: bold; margin-top: 10px; }
-        .badge-api { background: #0d6efd; margin-bottom: 10px; }
+        body { background: #1a1a1a; color: #fff; padding: 20px; }
+        .api-card { background: #2d2d2d; border-radius: 10px; padding: 20px; margin-bottom: 20px; border: 1px solid #444; }
+        .result-box { background: #000; color: #00ff00; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; min-height: 100px; white-space: pre-wrap; margin-top: 10px; }
+        input.form-control { background: #444; border: none; color: #fff; }
+        button { width: 100%; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold">Multi-API Explorer</h1>
-        <p class="text-muted">Visualização de Extração Total de Dados</p>
+    <h2 class="text-center mb-4">Teste de Extração Total de APIs</h2>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="api-card">
+                <h6>📞 Numverify</h6>
+                <input type="text" id="input_num" class="form-control mb-2" placeholder="5511999999999">
+                <button class="btn btn-primary" onclick="execNumverify()">Validar Número</button>
+                <div id="res_num" class="result-box">Aguardando...</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="api-card">
+                <h6>☁️ Weatherstack</h6>
+                <input type="text" id="input_weather" class="form-control mb-2" placeholder="Cidade">
+                <button class="btn btn-info" onclick="execWeather()">Ver Clima</button>
+                <div id="res_weather" class="result-box">Aguardando...</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="api-card">
+                <h6>🌍 Ipstack</h6>
+                <input type="text" id="input_ip" class="form-control mb-2" placeholder="8.8.8.8">
+                <button class="btn btn-warning" onclick="execIpstack()">Localizar IP</button>
+                <div id="res_ip" class="result-box">Aguardando...</div>
+            </div>
+        </div>
     </div>
 
-    <div class="row g-4">
-        <div class="col-md-6 col-lg-4">
-            <div class="api-card p-4 h-100">
-                <span class="badge badge-api">Numverify</span>
-                <h6>Validar Telefone</h6>
-                <input type="text" id="num_val" class="form-control form-control-sm mb-2" placeholder="Ex: 5511999999999">
-                <button class="btn btn-outline-primary btn-run" onclick="runNumverify()">Executar Extração</button>
-                <div class="mt-3">
-                    <small>Resultado:</small>
-                    <div id="out_num" class="json-output">Aguardando comando...</div>
-                </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="api-card">
+                <h6>📰 Mediastack</h6>
+                <button class="btn btn-success" onclick="execNews()">Última Notícia (Extração Total)</button>
+                <div id="res_news" class="result-box">Aguardando...</div>
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-4">
-            <div class="api-card p-4 h-100">
-                <span class="badge badge-api">Weatherstack</span>
-                <h6>Clima em Tempo Real</h6>
-                <input type="text" id="weather_val" class="form-control form-control-sm mb-2" placeholder="Cidade (ex: São Paulo)">
-                <button class="btn btn-outline-primary btn-run" onclick="runWeather()">Executar Extração</button>
-                <div class="mt-3">
-                    <small>Resultado:</small>
-                    <div id="out_weather" class="json-output">Aguardando comando...</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="api-card p-4 h-100">
-                <span class="badge badge-api">Ipstack</span>
-                <h6>Geolocalização de IP</h6>
-                <input type="text" id="ip_val" class="form-control form-control-sm mb-2" placeholder="Ex: 8.8.8.8">
-                <button class="btn btn-outline-primary btn-run" onclick="runIpstack()">Executar Extração</button>
-                <div class="mt-3">
-                    <small>Resultado:</small>
-                    <div id="out_ip" class="json-output">Aguardando comando...</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="api-card p-4 h-100">
-                <span class="badge badge-api">Mediastack</span>
-                <h6>Últimas Notícias (PT)</h6>
-                <button class="btn btn-outline-success btn-run" onclick="runNews()">Buscar Notícia Recente</button>
-                <div class="mt-3">
-                    <small>Resultado:</small>
-                    <div id="out_news" class="json-output">Aguardando comando...</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="api-card p-4 h-100">
-                <span class="badge badge-api">Coinlayer</span>
-                <h6>Câmbio Cripto</h6>
-                <input type="text" id="coin_val" class="form-control form-control-sm mb-2" placeholder="Ex: BTC ou ETH">
-                <button class="btn btn-outline-primary btn-run" onclick="runCoin()">Executar Extração</button>
-                <div class="mt-3">
-                    <small>Resultado:</small>
-                    <div id="out_coin" class="json-output">Aguardando comando...</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="api-card p-4 h-100">
-                <span class="badge badge-api">Aviationstack</span>
-                <h6>Rastreio de Voo</h6>
-                <button class="btn btn-outline-success btn-run" onclick="runAviation()">Obter Voo Atual</button>
-                <div class="mt-3">
-                    <small>Resultado:</small>
-                    <div id="out_aviation" class="json-output">Aguardando comando...</div>
-                </div>
+        <div class="col-md-6">
+            <div class="api-card">
+                <h6>✈️ Aviationstack</h6>
+                <button class="btn btn-danger" onclick="execAviation()">Dados de Voo (Live)</button>
+                <div id="res_aviation" class="result-box">Aguardando...</div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-[span_8](start_span)[span_9](start_span)[span_10](start_span)[span_11](start_span)[span_12](start_span)[span_13](start_span)// Chaves de API do seu arquivo txt[span_8](end_span)[span_9](end_span)[span_10](end_span)[span_11](end_span)[span_12](end_span)[span_13](end_span)
-const keys = {
-    numverify: '37c50a4c4aaf752f098edc2caf52c752',
-    ipstack: 'a9b57e3b51c26e5418baabf34be67947',
-    coinlayer: '49a4c82a024139de90b2bb2c457a6b75',
-    weatherstack: '0d594e7f43e48ecc64cf2c4a792ef36e',
-    aviationstack: '36a53d4825cb1729c3a81bf895f4100c',
-    mediastack: '3753b71e2e4af93251c56c8e44888655'
+[span_11](start_span)[span_12](start_span)[span_13](start_span)[span_14](start_span)[span_15](start_span)[span_16](start_span)// Chaves extraídas do seu arquivo[span_11](end_span)[span_12](end_span)[span_13](end_span)[span_14](end_span)[span_15](end_span)[span_16](end_span)
+const K = {
+    num: '37c50a4c4aaf752f098edc2caf52c752',
+    ip: 'a9b57e3b51c26e5418baabf34be67947',
+    weather: '0d594e7f43e48ecc64cf2c4a792ef36e',
+    aviation: '36a53d4825cb1729c3a81bf895f4100c',
+    media: '3753b71e2e4af93251c56c8e44888655'
 };
 
-// Funções de Extração Total baseadas no seu código:
-
-async function runNumverify() {
-    const num = document.getElementById('num_val').value;
-    const url = `https://apilayer.net/api/validate?access_key=${keys.numverify}&number=${num}`;
+async function execNumverify() {
+    const num = document.getElementById('input_num').value;
+    const url = `https://apilayer.net/api/validate?access_key=${K.num}&number=${num}`;
     try {
         const r = await fetch(url);
         const d = await r.json();
-        [span_14](start_span)// Extração Total conforme seu modelo[span_14](end_span)
+        [span_17](start_span)// Sua estrutura de Extração Total[span_17](end_span)
         const data = { valido: d.valid, numero: d.number, formato_local: d.local_format, formato_int: d.international_format, prefixo_pais: d.country_prefix, codigo_pais: d.country_code, nome_pais: d.country_name, localizacao: d.location, operadora: d.carrier, tipo_linha: d.line_type };
-        document.getElementById('out_num').innerText = JSON.stringify(data, null, 4);
-    } catch (e) { document.getElementById('out_num').innerText = "Erro na requisição."; }
+        document.getElementById('res_num').innerText = JSON.stringify(data, null, 2);
+    } catch (e) { document.getElementById('res_num').innerText = "Erro: " + e.message; }
 }
 
-async function runWeather() {
-    const cidade = document.getElementById('weather_val').value;
-    const url = `https://api.weatherstack.com/current?access_key=${keys.weatherstack}&query=${cidade}`;
+async function execWeather() {
+    const city = document.getElementById('input_weather').value;
+    const url = `https://api.weatherstack.com/current?access_key=${K.weather}&query=${city}`;
     try {
         const r = await fetch(url);
         const d = await r.json();
-        [span_15](start_span)// Extração Total conforme seu modelo[span_15](end_span)
+        [span_18](start_span)// Sua estrutura de Extração Total[span_18](end_span)
         const data = { temp: d.current.temperature, sensacao: d.current.feelslike, vento: d.current.wind_speed, humidade: d.current.humidity, uv: d.current.uv_index, visibilidade: d.current.visibility, pressao: d.current.pressure, is_day: d.current.is_day, descricao: d.current.weather_descriptions[0] };
-        document.getElementById('out_weather').innerText = JSON.stringify(data, null, 4);
-    } catch (e) { document.getElementById('out_weather').innerText = "Erro na requisição."; }
+        document.getElementById('res_weather').innerText = JSON.stringify(data, null, 2);
+    } catch (e) { document.getElementById('res_weather').innerText = "Erro: " + e.message; }
 }
 
-async function runIpstack() {
-    const ip = document.getElementById('ip_val').value;
-    const url = `https://api.ipstack.com/${ip}?access_key=${keys.ipstack}&hostname=1&security=1`;
+async function execIpstack() {
+    const ip = document.getElementById('input_ip').value;
+    const url = `https://api.ipstack.com/${ip}?access_key=${K.ip}&hostname=1&security=1`;
     try {
         const r = await fetch(url);
         const d = await r.json();
-        [span_16](start_span)// Extração Total conforme seu modelo[span_16](end_span)
+        [span_19](start_span)// Sua estrutura de Extração Total[span_19](end_span)
         const data = { ip: d.ip, tipo: d.type, continente: d.continent_name, pais: d.country_name, regiao: d.region_name, cidade: d.city, cep: d.zip, latitude: d.latitude, longitude: d.longitude, fuso_horario: d.time_zone?.id, moeda: d.currency?.name, conexao_isp: d.connection?.isp, seguranca_proxy: d.security?.is_proxy, seguranca_vpn: d.security?.is_vpn, seguranca_tor: d.security?.is_tor };
-        document.getElementById('out_ip').innerText = JSON.stringify(data, null, 4);
-    } catch (e) { document.getElementById('out_ip').innerText = "Erro na requisição."; }
+        document.getElementById('res_ip').innerText = JSON.stringify(data, null, 2);
+    } catch (e) { document.getElementById('res_ip').innerText = "Erro: " + e.message; }
 }
 
-async function runNews() {
-    const url = `https://api.mediastack.com/v1/news?access_key=${keys.mediastack}&languages=pt&limit=1`;
+async function execNews() {
+    const url = `https://api.mediastack.com/v1/news?access_key=${K.media}&languages=pt&limit=1`;
     try {
         const r = await fetch(url);
         const d = await r.json();
         const n = d.data[0];
-        [span_17](start_span)// Extração Total conforme seu modelo[span_17](end_span)
+        [span_20](start_span)// Sua estrutura de Extração Total[span_20](end_span)
         const data = { autor: n.author, titulo: n.title, descricao: n.description, fonte: n.source, categoria: n.category, url: n.url, data: n.published_at };
-        document.getElementById('out_news').innerText = JSON.stringify(data, null, 4);
-    } catch (e) { document.getElementById('out_news').innerText = "Erro na requisição."; }
+        document.getElementById('res_news').innerText = JSON.stringify(data, null, 2);
+    } catch (e) { document.getElementById('res_news').innerText = "Erro: " + e.message; }
 }
 
-async function runCoin() {
-    const moeda = document.getElementById('coin_val').value;
-    const url = `https://api.coinlayer.com/api/live?access_key=${keys.coinlayer}&symbols=${moeda}`;
-    try {
-        const r = await fetch(url);
-        const d = await r.json();
-        [span_18](start_span)// Extração Total conforme seu modelo[span_18](end_span)
-        const data = { sucesso: d.success, timestamp: d.timestamp, base: d.target, valor: d.rates[moeda] };
-        document.getElementById('out_coin').innerText = JSON.stringify(data, null, 4);
-    } catch (e) { document.getElementById('out_coin').innerText = "Erro na requisição."; }
-}
-
-async function runAviation() {
-    const url = `https://api.aviationstack.com/v1/flights?access_key=${keys.aviationstack}&limit=1`;
+async function execAviation() {
+    const url = `https://api.aviationstack.com/v1/flights?access_key=${K.aviation}&limit=1`;
     try {
         const r = await fetch(url);
         const d = await r.json();
         const f = d.data[0];
-        [span_19](start_span)// Extração Total conforme seu modelo[span_19](end_span)
+        [span_21](start_span)// Sua estrutura de Extração Total[span_21](end_span)
         const data = { voo_iata: f.flight.iata, status: f.flight_status, origem: f.departure.airport, origem_terminal: f.departure.terminal, destino: f.arrival.airport, companhia: f.airline.name, aeronave: f.aircraft?.registration };
-        document.getElementById('out_aviation').innerText = JSON.stringify(data, null, 4);
-    } catch (e) { document.getElementById('out_aviation').innerText = "Erro na requisição."; }
+        document.getElementById('res_aviation').innerText = JSON.stringify(data, null, 2);
+    } catch (e) { document.getElementById('res_aviation').innerText = "Erro: " + e.message; }
+}
+</script>
+</body>
+</html>
+(e) { document.getElementById('out_aviation').innerText = "Erro na requisição."; }
 }
 </script>
 
