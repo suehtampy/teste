@@ -2,197 +2,187 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Multi-API</title>
+    <title>Painel de Controle Multi-API</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; padding: 20px; }
-        .card { margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .result-box { background: #212529; color: #00ff00; padding: 15px; border-radius: 5px; font-family: monospace; max-height: 300px; overflow-y: auto; }
-        h5 { color: #0d6efd; }
+        body { background: #121212; color: #e0e0e0; padding: 40px 0; }
+        .api-card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; transition: 0.3s; }
+        .api-card:hover { border-color: #0d6efd; }
+        .json-output { background: #000; color: #00ff41; padding: 15px; border-radius: 8px; font-size: 0.85rem; height: 200px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #222; }
+        .btn-run { width: 100%; font-weight: bold; margin-top: 10px; }
+        .badge-api { background: #0d6efd; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1 class="text-center mb-4">Dashboard Multi-API</h1>
-    <p class="text-center text-muted">Execute os testes para visualizar a extração total de dados.</p>
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Multi-API Explorer</h1>
+        <p class="text-muted">Visualização de Extração Total de Dados</p>
+    </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card p-3">
-                <h5>📞 Numverify (Validar Telefone)</h5>
-                <div class="input-group mb-2">
-                    <input type="text" id="num_input" class="form-control" placeholder="Ex: 5511999999999">
-                    <button class="btn btn-primary" onclick="runNumverify()">Testar</button>
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+            <div class="api-card p-4 h-100">
+                <span class="badge badge-api">Numverify</span>
+                <h6>Validar Telefone</h6>
+                <input type="text" id="num_val" class="form-control form-control-sm mb-2" placeholder="Ex: 5511999999999">
+                <button class="btn btn-outline-primary btn-run" onclick="runNumverify()">Executar Extração</button>
+                <div class="mt-3">
+                    <small>Resultado:</small>
+                    <div id="out_num" class="json-output">Aguardando comando...</div>
                 </div>
-                <div id="res_numverify" class="result-box">Aguardando...</div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card p-3">
-                <h5>🌍 Ipstack (Geolocalização IP)</h5>
-                <div class="input-group mb-2">
-                    <input type="text" id="ip_input" class="form-control" placeholder="Ex: 8.8.8.8">
-                    <button class="btn btn-primary" onclick="runIpstack()">Testar</button>
+        <div class="col-md-6 col-lg-4">
+            <div class="api-card p-4 h-100">
+                <span class="badge badge-api">Weatherstack</span>
+                <h6>Clima em Tempo Real</h6>
+                <input type="text" id="weather_val" class="form-control form-control-sm mb-2" placeholder="Cidade (ex: São Paulo)">
+                <button class="btn btn-outline-primary btn-run" onclick="runWeather()">Executar Extração</button>
+                <div class="mt-3">
+                    <small>Resultado:</small>
+                    <div id="out_weather" class="json-output">Aguardando comando...</div>
                 </div>
-                <div id="res_ipstack" class="result-box">Aguardando...</div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card p-3">
-                <h5>☁️ Weatherstack (Clima)</h5>
-                <div class="input-group mb-2">
-                    <input type="text" id="weather_input" class="form-control" placeholder="Cidade">
-                    <button class="btn btn-primary" onclick="runWeather()">Testar</button>
+        <div class="col-md-6 col-lg-4">
+            <div class="api-card p-4 h-100">
+                <span class="badge badge-api">Ipstack</span>
+                <h6>Geolocalização de IP</h6>
+                <input type="text" id="ip_val" class="form-control form-control-sm mb-2" placeholder="Ex: 8.8.8.8">
+                <button class="btn btn-outline-primary btn-run" onclick="runIpstack()">Executar Extração</button>
+                <div class="mt-3">
+                    <small>Resultado:</small>
+                    <div id="out_ip" class="json-output">Aguardando comando...</div>
                 </div>
-                <div id="res_weather" class="result-box">Aguardando...</div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card p-3">
-                <h5>💰 Coinlayer (Cripto)</h5>
-                <div class="input-group mb-2">
-                    <input type="text" id="coin_input" class="form-control" placeholder="Ex: BTC">
-                    <button class="btn btn-primary" onclick="runCoin()">Testar</button>
+        <div class="col-md-6 col-lg-4">
+            <div class="api-card p-4 h-100">
+                <span class="badge badge-api">Mediastack</span>
+                <h6>Últimas Notícias (PT)</h6>
+                <button class="btn btn-outline-success btn-run" onclick="runNews()">Buscar Notícia Recente</button>
+                <div class="mt-3">
+                    <small>Resultado:</small>
+                    <div id="out_news" class="json-output">Aguardando comando...</div>
                 </div>
-                <div id="res_coin" class="result-box">Aguardando...</div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card p-3">
-                <h5>🗣️ Languagelayer (Detectar Idioma)</h5>
-                <div class="input-group mb-2">
-                    <input type="text" id="lang_input" class="form-control" placeholder="Texto para detectar">
-                    <button class="btn btn-primary" onclick="runLang()">Testar</button>
+        <div class="col-md-6 col-lg-4">
+            <div class="api-card p-4 h-100">
+                <span class="badge badge-api">Coinlayer</span>
+                <h6>Câmbio Cripto</h6>
+                <input type="text" id="coin_val" class="form-control form-control-sm mb-2" placeholder="Ex: BTC ou ETH">
+                <button class="btn btn-outline-primary btn-run" onclick="runCoin()">Executar Extração</button>
+                <div class="mt-3">
+                    <small>Resultado:</small>
+                    <div id="out_coin" class="json-output">Aguardando comando...</div>
                 </div>
-                <div id="res_lang" class="result-box">Aguardando...</div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card p-3">
-                <h5>💻 Userstack (User Agent)</h5>
-                <button class="btn btn-primary w-100 mb-2" onclick="runUserstack()">Detectar Meu Navegador</button>
-                <div id="res_userstack" class="result-box">Aguardando...</div>
+        <div class="col-md-6 col-lg-4">
+            <div class="api-card p-4 h-100">
+                <span class="badge badge-api">Aviationstack</span>
+                <h6>Rastreio de Voo</h6>
+                <button class="btn btn-outline-success btn-run" onclick="runAviation()">Obter Voo Atual</button>
+                <div class="mt-3">
+                    <small>Resultado:</small>
+                    <div id="out_aviation" class="json-output">Aguardando comando...</div>
+                </div>
             </div>
         </div>
-
-        <div class="col-md-6">
-            <div class="card p-3">
-                <h5>📰 Mediastack (Última Notícia PT)</h5>
-                <button class="btn btn-success w-100 mb-2" onclick="runNews()">Buscar Notícia</button>
-                <div id="res_news" class="result-box">Aguardando...</div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card p-3">
-                <h5>✈️ Aviationstack (Voo em Tempo Real)</h5>
-                <button class="btn btn-success w-100 mb-2" onclick="runAviation()">Rastrear 1 Voo</button>
-                <div id="res_aviation" class="result-box">Aguardando...</div>
-            </div>
-        </div>
-
     </div>
 </div>
 
 <script>
-// --- CHAVES E FUNÇÕES DO SEU ARQUIVO ---
-
+[span_8](start_span)[span_9](start_span)[span_10](start_span)[span_11](start_span)[span_12](start_span)[span_13](start_span)// Chaves de API do seu arquivo txt[span_8](end_span)[span_9](end_span)[span_10](end_span)[span_11](end_span)[span_12](end_span)[span_13](end_span)
 const keys = {
     numverify: '37c50a4c4aaf752f098edc2caf52c752',
     ipstack: 'a9b57e3b51c26e5418baabf34be67947',
     coinlayer: '49a4c82a024139de90b2bb2c457a6b75',
-    zenscrape: '4e77acc0-1145-11f1-8092-d7ae17128297',
-    scrapestack: '33145560-1146-11f1-ab99-e54536a63cf9',
-    languagelayer: 'a90535700eface3cd7c611ecd26fc85e',
     weatherstack: '0d594e7f43e48ecc64cf2c4a792ef36e',
     aviationstack: '36a53d4825cb1729c3a81bf895f4100c',
-    mediastack: '3753b71e2e4af93251c56c8e44888655',
-    userstack: '37c50a4c4aaf752f098edc2caf52c752'
+    mediastack: '3753b71e2e4af93251c56c8e44888655'
 };
 
-function display(id, data) {
-    document.getElementById(id).innerText = JSON.stringify(data, null, 4);
-}
-
-// Implementações baseadas no seu arquivo TXT:
+// Funções de Extração Total baseadas no seu código:
 
 async function runNumverify() {
-    const number = document.getElementById('num_input').value;
-    [span_0](start_span)const url = `https://apilayer.net/api/validate?access_key=${keys.numverify}&number=${number}`;[span_0](end_span)
-    const r = await fetch(url);
-    [span_1](start_span)const d = await r.json();[span_1](end_span)
-    [span_2](start_span)const data = { valido: d.valid, numero: d.number, formato_local: d.local_format, formato_int: d.international_format, prefixo_pais: d.country_prefix, codigo_pais: d.country_code, nome_pais: d.country_name, localizacao: d.location, operadora: d.carrier, tipo_linha: d.line_type };[span_2](end_span)
-    display('res_numverify', data);
-}
-
-async function runIpstack() {
-    const ip = document.getElementById('ip_input').value;
-    const url = `https://api.ipstack.com/${ip}?access_key=${keys.ipstack}&hostname=1&security=1`;
-    [span_3](start_span)const r = await fetch(url);[span_3](end_span)
-    const d = await r.json();
-    [span_4](start_span)const data = { ip: d.ip, tipo: d.type, continente: d.continent_name, pais: d.country_name, regiao: d.region_name, cidade: d.city, cep: d.zip, latitude: d.latitude, longitude: d.longitude, fuso_horario: d.time_zone?.id, moeda: d.currency?.name, conexao_isp: d.connection?.isp, seguranca_proxy: d.security?.is_proxy, seguranca_vpn: d.security?.is_vpn, seguranca_tor: d.security?.is_tor };[span_4](end_span)
-    display('res_ipstack', data);
+    const num = document.getElementById('num_val').value;
+    const url = `https://apilayer.net/api/validate?access_key=${keys.numverify}&number=${num}`;
+    try {
+        const r = await fetch(url);
+        const d = await r.json();
+        [span_14](start_span)// Extração Total conforme seu modelo[span_14](end_span)
+        const data = { valido: d.valid, numero: d.number, formato_local: d.local_format, formato_int: d.international_format, prefixo_pais: d.country_prefix, codigo_pais: d.country_code, nome_pais: d.country_name, localizacao: d.location, operadora: d.carrier, tipo_linha: d.line_type };
+        document.getElementById('out_num').innerText = JSON.stringify(data, null, 4);
+    } catch (e) { document.getElementById('out_num').innerText = "Erro na requisição."; }
 }
 
 async function runWeather() {
-    const cidade = document.getElementById('weather_input').value;
+    const cidade = document.getElementById('weather_val').value;
     const url = `https://api.weatherstack.com/current?access_key=${keys.weatherstack}&query=${cidade}`;
-    [span_5](start_span)const r = await fetch(url);[span_5](end_span)
-    [span_6](start_span)const d = await r.json();[span_6](end_span)
-    [span_7](start_span)const data = { temp: d.current.temperature, sensacao: d.current.feelslike, vento: d.current.wind_speed, humidade: d.current.humidity, uv: d.current.uv_index, visibilidade: d.current.visibility, pressao: d.current.pressure, is_day: d.current.is_day, descricao: d.current.weather_descriptions[0] };[span_7](end_span)
-    display('res_weather', data);
+    try {
+        const r = await fetch(url);
+        const d = await r.json();
+        [span_15](start_span)// Extração Total conforme seu modelo[span_15](end_span)
+        const data = { temp: d.current.temperature, sensacao: d.current.feelslike, vento: d.current.wind_speed, humidade: d.current.humidity, uv: d.current.uv_index, visibilidade: d.current.visibility, pressao: d.current.pressure, is_day: d.current.is_day, descricao: d.current.weather_descriptions[0] };
+        document.getElementById('out_weather').innerText = JSON.stringify(data, null, 4);
+    } catch (e) { document.getElementById('out_weather').innerText = "Erro na requisição."; }
 }
 
-async function runCoin() {
-    const moeda = document.getElementById('coin_input').value;
-    const url = `https://api.coinlayer.com/api/live?access_key=${keys.coinlayer}&symbols=${moeda}`;
-    [span_8](start_span)const r = await fetch(url);[span_8](end_span)
-    [span_9](start_span)const d = await r.json();[span_9](end_span)
-    [span_10](start_span)const data = { sucesso: d.success, timestamp: d.timestamp, base: d.target, valor: d.rates[moeda] };[span_10](end_span)
-    display('res_coin', data);
-}
-
-async function runLang() {
-    const texto = document.getElementById('lang_input').value;
-    const url = `https://api.languagelayer.com/detect?access_key=${keys.languagelayer}&query=${encodeURIComponent(texto)}`;
-    [span_11](start_span)const r = await fetch(url);[span_11](end_span)
-    [span_12](start_span)const d = await r.json();[span_12](end_span)
-    [span_13](start_span)const data = { idioma: d.results[0].language_name, codigo: d.results[0].language_code, probabilidade: d.results[0].probability, confiavel: d.results[0].reliable_result };[span_13](end_span)
-    display('res_lang', data);
-}
-
-async function runUserstack() {
-    const ua = navigator.userAgent;
-    const url = `https://api.userstack.com/detect?access_key=${keys.userstack}&ua=${encodeURIComponent(ua)}`;
-    [span_14](start_span)const r = await fetch(url);[span_14](end_span)
-    [span_15](start_span)const d = await r.json();[span_15](end_span)
-    [span_16](start_span)const data = { dispositivo_tipo: d.device.type, dispositivo_marca: d.device.brand, so_nome: d.os.name, so_versao: d.os.version, browser_nome: d.browser.name, browser_versao: d.browser.version, engine: d.browser.engine };[span_16](end_span)
-    display('res_userstack', data);
+async function runIpstack() {
+    const ip = document.getElementById('ip_val').value;
+    const url = `https://api.ipstack.com/${ip}?access_key=${keys.ipstack}&hostname=1&security=1`;
+    try {
+        const r = await fetch(url);
+        const d = await r.json();
+        [span_16](start_span)// Extração Total conforme seu modelo[span_16](end_span)
+        const data = { ip: d.ip, tipo: d.type, continente: d.continent_name, pais: d.country_name, regiao: d.region_name, cidade: d.city, cep: d.zip, latitude: d.latitude, longitude: d.longitude, fuso_horario: d.time_zone?.id, moeda: d.currency?.name, conexao_isp: d.connection?.isp, seguranca_proxy: d.security?.is_proxy, seguranca_vpn: d.security?.is_vpn, seguranca_tor: d.security?.is_tor };
+        document.getElementById('out_ip').innerText = JSON.stringify(data, null, 4);
+    } catch (e) { document.getElementById('out_ip').innerText = "Erro na requisição."; }
 }
 
 async function runNews() {
     const url = `https://api.mediastack.com/v1/news?access_key=${keys.mediastack}&languages=pt&limit=1`;
-    [span_17](start_span)const r = await fetch(url);[span_17](end_span)
-    const d = await r.json();
-    [span_18](start_span)const n = d.data[0];[span_18](end_span)
-    [span_19](start_span)const data = { autor: n.author, titulo: n.title, descricao: n.description, fonte: n.source, categoria: n.category, url: n.url, data: n.published_at };[span_19](end_span)
-    display('res_news', data);
+    try {
+        const r = await fetch(url);
+        const d = await r.json();
+        const n = d.data[0];
+        [span_17](start_span)// Extração Total conforme seu modelo[span_17](end_span)
+        const data = { autor: n.author, titulo: n.title, descricao: n.description, fonte: n.source, categoria: n.category, url: n.url, data: n.published_at };
+        document.getElementById('out_news').innerText = JSON.stringify(data, null, 4);
+    } catch (e) { document.getElementById('out_news').innerText = "Erro na requisição."; }
+}
+
+async function runCoin() {
+    const moeda = document.getElementById('coin_val').value;
+    const url = `https://api.coinlayer.com/api/live?access_key=${keys.coinlayer}&symbols=${moeda}`;
+    try {
+        const r = await fetch(url);
+        const d = await r.json();
+        [span_18](start_span)// Extração Total conforme seu modelo[span_18](end_span)
+        const data = { sucesso: d.success, timestamp: d.timestamp, base: d.target, valor: d.rates[moeda] };
+        document.getElementById('out_coin').innerText = JSON.stringify(data, null, 4);
+    } catch (e) { document.getElementById('out_coin').innerText = "Erro na requisição."; }
 }
 
 async function runAviation() {
     const url = `https://api.aviationstack.com/v1/flights?access_key=${keys.aviationstack}&limit=1`;
-    [span_20](start_span)const r = await fetch(url);[span_20](end_span)
-    const d = await r.json();
-    [span_21](start_span)const f = d.data[0];[span_21](end_span)
-    [span_22](start_span)const data = { voo_iata: f.flight.iata, status: f.flight_status, origem: f.departure.airport, origem_terminal: f.departure.terminal, destino: f.arrival.airport, companha: f.airline.name, aeronave: f.aircraft?.registration };[span_22](end_span)
-    display('res_aviation', data);
+    try {
+        const r = await fetch(url);
+        const d = await r.json();
+        const f = d.data[0];
+        [span_19](start_span)// Extração Total conforme seu modelo[span_19](end_span)
+        const data = { voo_iata: f.flight.iata, status: f.flight_status, origem: f.departure.airport, origem_terminal: f.departure.terminal, destino: f.arrival.airport, companhia: f.airline.name, aeronave: f.aircraft?.registration };
+        document.getElementById('out_aviation').innerText = JSON.stringify(data, null, 4);
+    } catch (e) { document.getElementById('out_aviation').innerText = "Erro na requisição."; }
 }
 </script>
 
