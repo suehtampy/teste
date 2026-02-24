@@ -3,25 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATHEUS OS | APEX</title>
-    <link rel="stylesheet" href="style.css">
+    <title>MATHEUS OS | APEX V13</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030305; --sidebar: #07070a; --accent: #3b82f6;
+            --card: #0d0d14; --text: #f1f5f9; --border: rgba(59, 130, 246, 0.2);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+
+        /* SIDEBAR */
+        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); padding: 30px 15px; flex-shrink: 0; }
+        .logo { font-size: 1.5rem; font-weight: 800; margin-bottom: 40px; color: #fff; }
+        .logo span { color: var(--accent); }
+
+        .nav-item { 
+            width:100%; padding:15px; background:none; border:none; color:#fff; text-align:left; 
+            font-weight:600; cursor:pointer; opacity:0.5; transition: 0.3s; margin-bottom: 5px;
+            display: block;
+        }
+        .nav-item.active { opacity:1; background: var(--accent); border-radius:10px; box-shadow: 0 0 15px var(--accent); }
+
+        /* CONTENT */
+        .content { flex:1; padding: 50px; overflow-y:auto; }
+        .tab-content { display:none; }
+        .tab-content.active { display:block; animation: fade 0.3s ease-in-out; }
+
+        @keyframes fade { from {opacity:0; transform: translateY(5px);} to {opacity:1; transform: translateY(0);} }
+
+        #clock { font-size: 4rem; font-weight: 800; color: var(--accent); margin-bottom: 10px; }
+        
+        /* TOOLS UI */
+        .tool-selector { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tool-selector button { 
+            padding: 10px 20px; background: var(--card); border: 1px solid var(--border); 
+            color: #fff; cursor: pointer; border-radius: 8px; transition: 0.2s;
+        }
+        .tool-selector button:hover { border-color: var(--accent); }
+
+        .tool-screen { display:none; background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid var(--border); }
+        .tool-screen.active { display:block; }
+
+        input, textarea { width:100%; padding:15px; background:#000; border:1px solid var(--border); color:#fff; margin-bottom:15px; border-radius:10px; font-family: 'JetBrains Mono'; }
+        .btn-main { width:100%; padding:15px; background:var(--accent); border:none; color:#fff; font-weight:800; cursor:pointer; border-radius:10px; }
+
+        /* RESULTS */
+        .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 20px; }
+        .res-item { background: rgba(255,255,255,0.03); padding:15px; border-radius:8px; border: 1px solid rgba(255,255,255,0.05); }
+        .label { font-size: 0.65rem; color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .val { font-family: 'JetBrains Mono'; font-size: 0.9rem; }
+        .output-box { margin-top:20px; padding:20px; background:#000; border: 1px dashed var(--accent); white-space: pre-wrap; font-family: 'JetBrains Mono'; }
+    </style>
 </head>
 <body>
 
     <nav class="sidebar">
         <div class="logo">MATHEUS<span>.OS</span></div>
-        <button class="nav-item active" onclick="showTab('dash')">PAINEL CENTRAL</button>
-        <button class="nav-item" onclick="showTab('tools')">CENTRAL DE APIs</button>
-        <button class="nav-item" onclick="showTab('buscar')">BUSCA LEGADA</button>
-        <button class="nav-item" onclick="showTab('rh')">RH & CARREIRA</button>
+        <button class="nav-item active" data-tab="dash">PAINEL CENTRAL</button>
+        <button class="nav-item" data-tab="tools">CENTRAL DE APIs</button>
+        <button class="nav-item" data-tab="rh">RH & CARREIRA</button>
     </nav>
 
     <main class="content">
         <section id="dash" class="tab-content active">
             <div id="clock">00:00:00</div>
-            <h1>Status: <span class="online">ONLINE</span></h1>
-            <p>Seja bem-vindo. Todas as ferramentas estão prontas para execução.</p>
+            <h1>Status: <span style="color: #00ff00;">ONLINE</span></h1>
+            <p style="opacity: 0.6;">Interface Matheus OS carregada com sucesso.</p>
         </section>
 
         <section id="tools" class="tab-content">
@@ -30,39 +78,129 @@
                 <button onclick="openTool('num')">TELEFONE</button>
                 <button onclick="openTool('ip')">IP SCAN</button>
                 <button onclick="openTool('coin')">CRIPTOMOEDAS</button>
-                <button onclick="openTool('weather')">CLIMA</button>
             </div>
 
             <div id="tool-num" class="tool-screen active">
-                <input type="text" id="phoneInput" placeholder="5511999999999">
-                <button class="btn-main" onclick="apiNum()">CONSULTAR NÚMERO</button>
+                <h3>Consultar Número (Numverify)</h3>
+                <input type="text" id="phoneInput" placeholder="Ex: 5511999999999">
+                <button class="btn-main" onclick="apiNum()">EXECUTAR SCAN</button>
                 <div id="res-num" class="result-grid"></div>
             </div>
 
             <div id="tool-ip" class="tool-screen">
+                <h3>Rastrear IP (Ipstack)</h3>
                 <input type="text" id="ipInput" placeholder="IP Alvo (vazio para o seu)">
-                <button class="btn-main" onclick="apiIP()">RASTREAR IP</button>
+                <button class="btn-main" onclick="apiIP()">EXECUTAR RASTREIO</button>
                 <div id="res-ip" class="result-grid"></div>
             </div>
 
             <div id="tool-coin" class="tool-screen">
+                <h3>Cotação Cripto (Coinlayer)</h3>
                 <input type="text" id="coinInput" placeholder="Ex: BTC, ETH, SOL">
-                <button class="btn-main" onclick="apiCoin()">PREÇO ATUAL</button>
+                <button class="btn-main" onclick="apiCoin()">VER PREÇO</button>
                 <div id="res-coin" class="result-grid"></div>
             </div>
         </section>
 
         <section id="rh" class="tab-content">
             <h2>Gerador Profissional</h2>
-            <textarea id="expText" placeholder="Descreva sua experiência ou vaga desejada..."></textarea>
+            <textarea id="expText" placeholder="Descreva a sua experiência ou vaga desejada..."></textarea>
             <div class="tool-selector">
-                <button onclick="genBio()">CRIAR BIO</button>
-                <button onclick="genCV()">CRIAR CURRÍCULO</button>
+                <button onclick="genBio()">GERAR BIO</button>
+                <button onclick="genCV()">GERAR CURRÍCULO</button>
             </div>
-            <div id="rhOutput" class="output-box"></div>
+            <div id="rhOutput" class="output-box">Os resultados aparecerão aqui...</div>
         </section>
     </main>
 
-    <script src="scripts.js"></script>
+    <script>
+        // CONFIGURAÇÕES
+        const PROXY = "https://corsproxy.io/?";
+        const KEYS = {
+            num: '37c50a4c4aaf752f098edc2caf52c752',
+            ip: 'a9b57e3b51c26e5418baabf34be67947',
+            coin: '49a4c82a024139de90b2bb2c457a6b75'
+        };
+
+        // RELÓGIO
+        setInterval(() => { 
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString(); 
+        }, 1000);
+
+        // --- CORREÇÃO DAS ABAS ---
+        document.querySelectorAll('.nav-item').forEach(button => {
+            button.addEventListener('click', () => {
+                const targetTab = button.getAttribute('data-tab');
+                
+                // Remove active de todos
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                
+                // Ativa o correto
+                document.getElementById(targetTab).classList.add('active');
+                button.classList.add('active');
+            });
+        });
+
+        // --- NAVEGAÇÃO INTERNA DAS TOOLS ---
+        function openTool(id) {
+            document.querySelectorAll('.tool-screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('tool-' + id).classList.add('active');
+        }
+
+        const render = (l, v) => `<div class="res-item"><span class="label">${l}</span><span class="val">${v || '---'}</span></div>`;
+
+        // --- FUNÇÕES DE API ---
+
+        async function apiNum() {
+            const val = document.getElementById('phoneInput').value;
+            const out = document.getElementById('res-num');
+            if(!val) return alert("Insira um número!");
+            out.innerHTML = "Consultando túnel seguro...";
+            try {
+                const url = `http://apilayer.net/api/validate?access_key=${KEYS.num}&number=${val}`;
+                const r = await fetch(PROXY + encodeURIComponent(url));
+                const d = await r.json();
+                out.innerHTML = render('Operadora', d.carrier) + render('Localização', d.location) + render('Válido', d.valid ? 'SIM' : 'NÃO') + render('Tipo', d.line_type);
+            } catch(e) { out.innerHTML = "Erro de conexão via Proxy."; }
+        }
+
+        async function apiIP() {
+            const val = document.getElementById('ipInput').value || 'check';
+            const out = document.getElementById('res-ip');
+            out.innerHTML = "Rastreando...";
+            try {
+                const url = `http://api.ipstack.com/${val}?access_key=${KEYS.ip}`;
+                const r = await fetch(PROXY + encodeURIComponent(url));
+                const d = await r.json();
+                out.innerHTML = render('Cidade', d.city) + render('País', d.country_name) + render('ISP', d.connection?.isp) + render('Latitude', d.latitude);
+            } catch(e) { out.innerHTML = "Erro ao localizar IP."; }
+        }
+
+        async function apiCoin() {
+            const val = document.getElementById('coinInput').value.toUpperCase();
+            const out = document.getElementById('res-coin');
+            if(!val) return alert("Insira a sigla (Ex: BTC)");
+            out.innerHTML = "Buscando mercado...";
+            try {
+                const url = `http://api.coinlayer.com/api/live?access_key=${KEYS.coin}&symbols=${val}`;
+                const r = await fetch(PROXY + encodeURIComponent(url));
+                const d = await r.json();
+                out.innerHTML = render('Moeda', val) + render('Preço (USD)', '$ ' + d.rates[val].toFixed(2));
+            } catch(e) { out.innerHTML = "Erro na cotação."; }
+        }
+
+        // --- RH ---
+        function genBio() {
+            const text = document.getElementById('expText').value;
+            document.getElementById('rhOutput').innerText = `Bio Sugerida:\n\nProfissional focado em ${text}. Especialista em resolver problemas complexos com tecnologia.`;
+        }
+
+        function genCV() {
+            const text = document.getElementById('expText').value;
+            document.getElementById('rhOutput').innerText = `MATHEUS | PERFIL PROFISSIONAL\n---------------------------\nExperiência: ${text}\nStatus: Pronto para novos desafios.`;
+        }
+    </script>
 </body>
 </html>
