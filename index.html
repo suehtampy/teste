@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATHEUS OS | APEX</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="logo">MATHEUS<span>.OS</span></div>
+        <button class="nav-item active" onclick="showTab('dash')">PAINEL CENTRAL</button>
+        <button class="nav-item" onclick="showTab('tools')">CENTRAL DE APIs</button>
+        <button class="nav-item" onclick="showTab('buscar')">BUSCA LEGADA</button>
+        <button class="nav-item" onclick="showTab('rh')">RH & CARREIRA</button>
+    </nav>
+
+    <main class="content">
+        <section id="dash" class="tab-content active">
+            <div id="clock">00:00:00</div>
+            <h1>Status: <span class="online">ONLINE</span></h1>
+            <p>Seja bem-vindo. Todas as ferramentas estão prontas para execução.</p>
+        </section>
+
+        <section id="tools" class="tab-content">
+            <h2>Investigação & Dados</h2>
+            <div class="tool-selector">
+                <button onclick="openTool('num')">TELEFONE</button>
+                <button onclick="openTool('ip')">IP SCAN</button>
+                <button onclick="openTool('coin')">CRIPTOMOEDAS</button>
+                <button onclick="openTool('weather')">CLIMA</button>
+            </div>
+
+            <div id="tool-num" class="tool-screen active">
+                <input type="text" id="phoneInput" placeholder="5511999999999">
+                <button class="btn-main" onclick="apiNum()">CONSULTAR NÚMERO</button>
+                <div id="res-num" class="result-grid"></div>
+            </div>
+
+            <div id="tool-ip" class="tool-screen">
+                <input type="text" id="ipInput" placeholder="IP Alvo (vazio para o seu)">
+                <button class="btn-main" onclick="apiIP()">RASTREAR IP</button>
+                <div id="res-ip" class="result-grid"></div>
+            </div>
+
+            <div id="tool-coin" class="tool-screen">
+                <input type="text" id="coinInput" placeholder="Ex: BTC, ETH, SOL">
+                <button class="btn-main" onclick="apiCoin()">PREÇO ATUAL</button>
+                <div id="res-coin" class="result-grid"></div>
+            </div>
+        </section>
+
+        <section id="rh" class="tab-content">
+            <h2>Gerador Profissional</h2>
+            <textarea id="expText" placeholder="Descreva sua experiência ou vaga desejada..."></textarea>
+            <div class="tool-selector">
+                <button onclick="genBio()">CRIAR BIO</button>
+                <button onclick="genCV()">CRIAR CURRÍCULO</button>
+            </div>
+            <div id="rhOutput" class="output-box"></div>
+        </section>
+    </main>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
